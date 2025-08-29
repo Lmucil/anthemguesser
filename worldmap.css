@@ -1,0 +1,49 @@
+.world-map {
+    position: absolute;
+    top: 0;
+    left:0;
+    width: max-content;
+    height: max-content;
+    min-height: 30em;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+svg {
+    width: 100vw;
+    height: 100vh;
+}
+
+path {
+    fill: #443d4b;
+    stroke: #dcbfff;
+    transition: 100ms
+}
+
+path:hover {
+    fill: #c99aff;
+}
+
+.side-panel {
+    position: fixed;
+    background-color: #1d1a20;
+    padding: 2em;
+    top:0;
+    left: -30em;
+    width: 100%;
+    max-width: 30em;
+    transition:600ms cubic-bezier(0.77, 0, 0.18, 1);
+    overflow: scroll;
+    z-index: 1;
+}
+
+.side-panel .container {
+    padding-block: 2em;
+    transition: 200ms ease-out;
+
+}
+
+.side-panel-open {left: 0;}
+.hide{opacity: 0;}
