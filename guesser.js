@@ -116,9 +116,9 @@
     "Urguay.m4a",
     "Uzbekistan.m4a",
     "Vietnam.m4a"
-
   ];
 
+  playBtn.disabled = false;
 
   let currentAnswer = null;
   let anthemAudio = null;
@@ -157,6 +157,7 @@
     anthemAudio.play();
     roundInProgress = true;
     guessBtn.disabled = false;
+    playBtn.disabled = true;
     nameEl.textContent = "Guess the country!";
   });
 
@@ -202,7 +203,8 @@
     } else {
       alert(`Wrong! The correct answer was ${currentAnswer}.`);
     }
-
+    guessBtn.disabled = true;
+    playBtn.disabled = false
     roundInProgress = false;
     currentAnswer = null;
     if (anthemAudio) {
