@@ -5,6 +5,7 @@
   const nameEl = document.getElementById("country-name");
   const guessBtn = document.getElementById("guess-btn");
   const playBtn = document.getElementById("play-btn");
+  const points = document.getElementById("points");
 
   const BASE_FILL = "#443d4b";
   const HOVER_FILL = "#c99aff";
@@ -141,7 +142,16 @@
   playBtn.addEventListener("click", () => {
     if (roundInProgress) return;
 
-    const file = anthemFiles[Math.floor(Math.random() * anthemFiles.length)];
+    window.playedAnthems = window.playedAnthems || new Set();
+    let remaining = anthemFiles.filter(f => !window.playedAnthems.has(f));
+
+    if (remaining.length === 0) {
+      window.playedAnthems.clear();
+      remaining = [...anthemFiles];
+    }
+
+    const file = remaining[Math.floor(Math.random() * remaining.length)];
+    window.playedAnthems.add(file);
     currentAnswer = file.replace(/\.m4a$/, "");
     anthemAudio = new Audio(`anthem_data/${file}`);
     anthemAudio.play();
@@ -173,7 +183,7 @@
 
       svg.querySelectorAll(`[name="${CSS.escape(getFullClass(e.target))}"]`).forEach(p => {
         p.style.strokeWidth = 1.4;
-        // not "class", "name" class 
+        // not "class", "name" class, class is only for countries with several areas
       });
     });
   });
@@ -182,9 +192,13 @@
     if (!roundInProgress || !currentAnswer) return;
 
     const target = nameEl.textContent || "";
+    let currentPoint = 0
 
     if (target === currentAnswer) {
       alert("Correct! 🎉");
+      currentPoint += 1;
+      points.textContent = "Current points: " + currentPoint;
+      
     } else {
       alert(`Wrong! The correct answer was ${currentAnswer}.`);
     }
