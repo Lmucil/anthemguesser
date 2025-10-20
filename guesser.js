@@ -123,6 +123,7 @@
   let currentAnswer = null;
   let anthemAudio = null;
   let roundInProgress = false;
+  let currentPoints = 0;
 
 
 
@@ -189,22 +190,19 @@
     });
   });
 
-  let currentPoint = 0
   guessBtn.addEventListener("click", () => {
     if (!roundInProgress || !currentAnswer) return;
 
     const target = nameEl.textContent || "";
-
     if (target === currentAnswer) {
       alert("Correct! 🎉");
-      currentPoint++ ;
-      points.textContent = "Current points: " + currentPoint;
-      
+      currentPoints = currentPoints + 1;
+      points.textContent = "Current points: " + currentPoints;
     } else {
       alert(`Wrong! The correct answer was ${currentAnswer}.`);
     }
     guessBtn.disabled = true;
-    playBtn.disabled = false
+    playBtn.disabled = false;
     roundInProgress = false;
     currentAnswer = null;
     if (anthemAudio) {
