@@ -189,15 +189,15 @@
     });
   });
 
+  let currentPoint = 0
   guessBtn.addEventListener("click", () => {
     if (!roundInProgress || !currentAnswer) return;
 
     const target = nameEl.textContent || "";
-    let currentPoint = 0
 
     if (target === currentAnswer) {
       alert("Correct! 🎉");
-      currentPoint += 1;
+      currentPoint++ ;
       points.textContent = "Current points: " + currentPoint;
       
     } else {
@@ -282,3 +282,6 @@
     return { x: svgPt.x, y: svgPt.y };
   }
 })();
+
+
+// active on 
