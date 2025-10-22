@@ -212,42 +212,27 @@
   ensureViewBox(svg);
   let viewBox = parseViewBox(svg);
   let isPanning = false;
-  let startScreen = { x: 0, y: 0 };
+  let startPt = { x: 0, y: 0 };
   let startView = { ...viewBox };
-  let svgRect = null;
-  let scale = { x: 1, y: 1 };
-  let rafPending = false;
-  let lastClient = { x: 0, y: 0 };
+
 
   svg.style.cursor = "grab";
   svg.style.touchAction = "none";
 
-  svg.addEventListener("pointerdown", (e) => {
-    if (e.button !== 0) return;
+  svg.addEventListener("mousedown", (e) => {
     isPanning = true;
-    try { svg.setPointerCapture(e.pointerId); } catch (err) {}
-    svgRect = svg.getBoundingClientRect();
-    // compute pixel -> svg unit scale once on pointerdown to avoid
-    // repeated getScreenCTM/createSVGPoint calls and reduce jitter
-    scale.x = viewBox.width / Math.max(1, svgRect.width);
-    scale.y = viewBox.height / Math.max(1, svgRect.height);
-    startScreen = { x: e.clientX, y: e.clientY };
     startView = { ...viewBox };
-    lastClient.x = e.clientX;
-    lastClient.y = e.clientY;
-    svg.style.cursor = "grabbing";
-    e.preventDefault();
   });
 
-  function doPan() {
-    rafPending = false;
+  window.addEventListener("mousemove", (e) => {
     if (!isPanning) return;
-    const dxScreen = lastClient.x - startScreen.x;
-    const dyScreen = lastClient.y - startScreen.y;
-    viewBox.minX = startView.minX - dxScreen * scale.x;
-    viewBox.minY = startView.minY - dyScreen * scale.y;
+    const pt = clientToSvg(svg, e.clientX, e.clientY);
+    const dx = pt.x - startPt.x;
+    const dy = pt.y - startPt.y;
+    viewBox.minX = startView.minX - dx;
+    viewBox.minY = startView.minY - dy;
     applyViewBox(svg, viewBox);
-  }
+  });
 
   svg.addEventListener("pointermove", (e) => {
     if (!isPanning) return;
@@ -260,8 +245,7 @@
     }
   });
 
-  svg.addEventListener("pointerup", (e) => {
-    if (!isPanning) return;
+  window.addEventListener("mouseup", () => {
     isPanning = false;
     try { svg.releasePointerCapture(e.pointerId); } catch (err) {}
     svg.style.cursor = "grab";
