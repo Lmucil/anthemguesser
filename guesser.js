@@ -1,4 +1,3 @@
-
 (function () {
   const svg = document.querySelector("#world");
   const countries = document.querySelectorAll("#world path");
@@ -25,7 +24,7 @@
     "Bosnia Herzegovina.m4a",
     "Brazil.m4a",
     "Bulgaria.m4a",
-    "Burnei.m4a",
+    "Brunei.m4a",
     "Cambodia.m4a",
     "Canada.m4a",
     "Chad.m4a",
@@ -111,7 +110,7 @@
     "United Arab Emirates.m4a",
     "United Kingdom.m4a",
     "United States.m4a",
-    "Urguay.m4a",
+    "Uruguay.m4a",
     "Uzbekistan.m4a",
     "Vietnam.m4a"
   ];
@@ -123,7 +122,14 @@
   let roundInProgress = false;
   let currentPoints = 0;
 
-
+  // Drag/pan state
+  let isPanning = false;
+  let startClient = { x: 0, y: 0 };  // screen coords at drag start
+  let startView = {};                  // viewBox snapshot at drag start
+  let svgPixelToSvgUnit = 1;          // px-per-SVG-unit at drag start (constant during drag)
+  let viewBox;
+  let rafPending = false;
+  let lastClient = { x: 0, y: 0 };   // latest screen coords during drag
 
   function getFullClass(el) {
     return (el.getAttribute("class") || "").trim();
@@ -136,19 +142,14 @@
     });
   }
 
-
-
   playBtn.addEventListener("click", () => {
     if (roundInProgress) return;
-
     window.playedAnthems = window.playedAnthems || new Set();
     let remaining = anthemFiles.filter(f => !window.playedAnthems.has(f));
-
     if (remaining.length === 0) {
       window.playedAnthems.clear();
       remaining = [...anthemFiles];
     }
-
     const file = remaining[Math.floor(Math.random() * remaining.length)];
     window.playedAnthems.add(file);
     currentAnswer = file.replace(/\.m4a$/, "");
@@ -160,44 +161,42 @@
     nameEl.textContent = "Guess the country!";
   });
 
-
+  // Track whether the last mousedown turned into a drag, so clicks after panning are ignored.
+  let wasDragging = false;
+  svg.addEventListener("mousedown", e => {
+    if (e.button !== 0) return;
+    const ox = e.clientX, oy = e.clientY;
+    const onUp = ev => {
+      wasDragging = Math.abs(ev.clientX - ox) > 5 || Math.abs(ev.clientY - oy) > 5;
+      document.removeEventListener("mouseup", onUp, true);
+    };
+    document.addEventListener("mouseup", onUp, { capture: true, once: true });
+  });
 
   countries.forEach(country => {
     const groupKey = getFullClass(country);
+    country.addEventListener("mouseenter", () => !isPanning && setGroupFill(groupKey, HOVER_FILL));
+    country.addEventListener("mouseleave", () => setGroupFill(groupKey, BASE_FILL));
 
-    country.addEventListener("mouseenter", () => {
-      setGroupFill(groupKey, HOVER_FILL);
-    });
-
-    country.addEventListener("mouseleave", () => {
-      setGroupFill(groupKey, BASE_FILL);
-    });
-
-    country.addEventListener("click", (e) => {
-      const clickedName =
-        e.target.getAttribute("name") ||
-        getFullClass(e.target) ||
-        "Unknown";
-
+    country.addEventListener("click", e => {
+      if (wasDragging) return;   // ignore click that ended a pan gesture
+      const clickedName = e.target.getAttribute("name") || getFullClass(e.target) || "Unknown";
       nameEl.textContent = clickedName;
-
       svg.querySelectorAll(`[name="${CSS.escape(getFullClass(e.target))}"]`).forEach(p => {
         p.style.strokeWidth = 1.4;
-        // not "class", "name" class, class is only for countries with several areas
       });
     });
   });
 
   guessBtn.addEventListener("click", () => {
     if (!roundInProgress || !currentAnswer) return;
-
     const target = nameEl.textContent || "";
     if (target === currentAnswer) {
       alert("Correct! 🎉");
-      currentPoints = currentPoints + 1;
+      currentPoints++;
       points.textContent = "Current points: " + currentPoints;
     } else {
-      alert(`Wrong! The correct answer was ${currentAnswer}.`);
+      alert(`Wrong... The correct answer was ${currentAnswer}. Please train more.`);
     }
     guessBtn.disabled = true;
     playBtn.disabled = false;
@@ -210,68 +209,115 @@
   });
 
   ensureViewBox(svg);
-  let viewBox = parseViewBox(svg);
-  let isPanning = false;
-  let startPt = { x: 0, y: 0 };
-  let startView = { ...viewBox };
-
+  viewBox = parseViewBox(svg);
+  const initialViewBox = { ...viewBox };
+  const MAX_ZOOM_OUT_MULTIPLIER = 2;
+  const MIN_ZOOM_IN_MULTIPLIER = 0.1;
 
   svg.style.cursor = "grab";
   svg.style.touchAction = "none";
 
-  svg.addEventListener("mousedown", (e) => {
-    isPanning = true;
-    startView = { ...viewBox };
-  });
+  // Drag/pan: use screen-space deltas to avoid drift from re-projecting through a moving viewBox.
+  function initDragHandlers() {
+    if (svg._dragInitialized) return;
+    svg._dragInitialized = true;
 
-  window.addEventListener("mousemove", (e) => {
-    if (!isPanning) return;
-    const pt = clientToSvg(svg, e.clientX, e.clientY);
-    const dx = pt.x - startPt.x;
-    const dy = pt.y - startPt.y;
-    viewBox.minX = startView.minX - dx;
-    viewBox.minY = startView.minY - dy;
-    applyViewBox(svg, viewBox);
-  });
-
-  svg.addEventListener("pointermove", (e) => {
-    if (!isPanning) return;
-    lastClient.x = e.clientX;
-    lastClient.y = e.clientY;
-    // throttle updates to animation frames for smoothness
-    if (!rafPending) {
+    function scheduleUpdate() {
+      if (rafPending) return;
       rafPending = true;
-      requestAnimationFrame(doPan);
+      requestAnimationFrame(() => {
+        rafPending = false;
+        // Convert screen delta to SVG units using the scale captured at drag-start.
+        // svgPixelToSvgUnit is stable for the whole drag, so there's no feedback loop.
+        const dxScreen = lastClient.x - startClient.x;
+        const dyScreen = lastClient.y - startClient.y;
+        viewBox.minX = startView.minX - dxScreen * svgPixelToSvgUnit;
+        viewBox.minY = startView.minY - dyScreen * svgPixelToSvgUnit;
+        applyViewBox(svg, viewBox);
+      });
     }
-  });
 
-  window.addEventListener("mouseup", () => {
-    isPanning = false;
-    try { svg.releasePointerCapture(e.pointerId); } catch (err) {}
-    svg.style.cursor = "grab";
-    // ensure a final update
-    lastClient.x = e.clientX;
-    lastClient.y = e.clientY;
-    if (!rafPending) requestAnimationFrame(doPan);
-  });
+    // Mouse handlers
+    function onMouseDown(e) {
+      if (e.button !== 0) return;
+      isPanning = true;
+      startView = { ...viewBox };
+      startClient = { x: e.clientX, y: e.clientY };
+      lastClient  = { x: e.clientX, y: e.clientY };
+      // Capture scale once at drag-start: SVG units per screen pixel
+      const rect = svg.getBoundingClientRect();
+      svgPixelToSvgUnit = viewBox.width / rect.width;
+      svg.style.cursor = "grabbing";
+      svg.classList.add("panning");
+      document.addEventListener("mousemove", onMouseMove, { passive: true });
+      document.addEventListener("mouseup",   onMouseUp,   { once: true });
+    }
 
-  svg.addEventListener("pointercancel", (e) => {
-    isPanning = false;
-    try { svg.releasePointerCapture(e.pointerId); } catch (err) {}
-    svg.style.cursor = "grab";
-    rafPending = false;
-  });
+    function onMouseMove(e) {
+      if (!isPanning) return;
+      lastClient.x = e.clientX;
+      lastClient.y = e.clientY;
+      scheduleUpdate();
+    }
 
-  svg.addEventListener("wheel", (e) => {
+    function onMouseUp() {
+      if (!isPanning) return;
+      isPanning = false;
+      svg.style.cursor = "grab";
+      svg.classList.remove("panning");
+      document.removeEventListener("mousemove", onMouseMove);
+    }
+
+    svg.addEventListener("mousedown", onMouseDown);
+
+    // Touch handlers (single-touch pan)
+    function onTouchStart(e) {
+      if (e.touches.length !== 1) return;
+      const t = e.touches[0];
+      isPanning = true;
+      startView  = { ...viewBox };
+      startClient = { x: t.clientX, y: t.clientY };
+      lastClient  = { x: t.clientX, y: t.clientY };
+      const rect = svg.getBoundingClientRect();
+      svgPixelToSvgUnit = viewBox.width / rect.width;
+      e.preventDefault();
+    }
+
+    function onTouchMove(e) {
+      if (!isPanning || e.touches.length !== 1) return;
+      const t = e.touches[0];
+      lastClient.x = t.clientX;
+      lastClient.y = t.clientY;
+      scheduleUpdate();
+      e.preventDefault();
+    }
+
+    function onTouchEnd() {
+      isPanning = false;
+    }
+
+    svg.addEventListener("touchstart",  onTouchStart,  { passive: false });
+    svg.addEventListener("touchmove",   onTouchMove,   { passive: false });
+    svg.addEventListener("touchend",    onTouchEnd);
+    svg.addEventListener("touchcancel", onTouchEnd);
+  }
+
+  initDragHandlers();
+
+  svg.addEventListener("wheel", e => {
     e.preventDefault();
-    const scaleFactor = (e.deltaY < 0) ? 0.9 : 1.1;
+    const rawScale = e.deltaY < 0 ? 0.9 : 1.1;
     const mouse = clientToSvg(svg, e.clientX, e.clientY);
-
-    viewBox.minX = mouse.x - (mouse.x - viewBox.minX) * scaleFactor;
-    viewBox.minY = mouse.y - (mouse.y - viewBox.minY) * scaleFactor;
-    viewBox.width *= scaleFactor;
-    viewBox.height *= scaleFactor;
-
+    const maxWidth = initialViewBox.width * MAX_ZOOM_OUT_MULTIPLIER;
+    const minWidth = initialViewBox.width * MIN_ZOOM_IN_MULTIPLIER;
+    let desiredWidth = viewBox.width * rawScale;
+    let safeScale = rawScale;
+    if (desiredWidth > maxWidth) safeScale = maxWidth / viewBox.width;
+    else if (desiredWidth < minWidth) safeScale = minWidth / viewBox.width;
+    viewBox.minX = mouse.x - (mouse.x - viewBox.minX) * safeScale;
+    viewBox.minY = mouse.y - (mouse.y - viewBox.minY) * safeScale;
+    viewBox.width *= safeScale;
+    viewBox.height *= safeScale;
     applyViewBox(svg, viewBox);
   }, { passive: false });
 
@@ -283,10 +329,7 @@
   }
 
   function parseViewBox(svgEl) {
-    const [minX, minY, width, height] = svgEl
-      .getAttribute("viewBox")
-      .split(/\s+|,/)
-      .map(Number);
+    const [minX, minY, width, height] = svgEl.getAttribute("viewBox").split(/\s+|,/).map(Number);
     return { minX, minY, width, height };
   }
 
@@ -304,6 +347,3 @@
     return { x: svgPt.x, y: svgPt.y };
   }
 })();
-
-
-// active on 
