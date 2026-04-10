@@ -1010,56 +1010,61 @@
             </svg>
         </svg>
     </div>
-        <aside class="side-panel">
-          <div class="panel-header">
-            <div class="panel-label">Selected Country</div>
-            <div id="country-name">Click a country on the map</div>
-            <div id="selected-hint"><span class="dot"></span>No country selected</div>
-          </div>
-          <div class="panel-body">
-            <div class="audio-card">
-              <div class="waveform idle" id="waveform">
-                <div class="waveform-bar"></div><div class="waveform-bar"></div>
-                <div class="waveform-bar"></div><div class="waveform-bar"></div>
-                <div class="waveform-bar"></div>
-              </div>
-              <div class="audio-info">
-                <div class="a-label">National Anthem</div>
-                <div class="a-status" id="audio-status">Waiting for game…</div>
-              </div>
-            </div>
-            <button class="btn btn-ghost" id="play-btn" disabled>🔄&nbsp; Replay Anthem</button>
-            <button class="btn btn-success" id="guess-btn" disabled>✓&nbsp; Submit Guess</button>
-            <div class="volume-row">
-              <span class="vol-icon" id="vol-icon">🔊</span>
-              <input type="range" class="vol-slider" id="vol-slider" min="0" max="100" value="60">
-              <span class="vol-pct" id="vol-pct">60%</span>
-            </div>
-            <div class="panel-hr"></div>
-            <div class="stats-grid">
-              <div class="stat-card ok">
-                <div class="stat-val" id="stat-correct">0</div>
-                <div class="stat-lbl">✓ Correct</div>
-              </div>
-              <div class="stat-card bad">
-                <div class="stat-val" id="stat-wrong">0</div>
-                <div class="stat-lbl">✗ Wrong</div>
-              </div>
-            </div>
-            <div id="points" style="display:none">0</div>
-          </div>
-        </aside>
+
+    <!-- Floating Game Control Box (bottom-right) -->
+    <div id="game-control-box">
+      <div class="gcb-country">
+        <div class="gcb-label" id="selected-country-label">Selected Country</div>
+        <div id="country-name">Click a country on the map</div>
+        <div id="selected-hint"><span class="dot"></span>No country selected</div>
+      </div>
+      <div class="gcb-divider"></div>
+      <div class="audio-card">
+        <div class="waveform idle" id="waveform">
+          <div class="waveform-bar"></div><div class="waveform-bar"></div>
+          <div class="waveform-bar"></div><div class="waveform-bar"></div>
+          <div class="waveform-bar"></div>
+        </div>
+        <div class="audio-info">
+          <div class="a-label" id="anthem-label">National Anthem</div>
+          <div class="a-status" id="audio-status">Waiting for game…</div>
+        </div>
+      </div>
+      <div class="gcb-buttons">
+        <button class="btn btn-ghost" id="play-btn" disabled>🔄 Replay</button>
+        <button class="btn btn-success" id="guess-btn" disabled>✓ Submit</button>
+        <button class="btn btn-proceed hidden" id="proceed-btn">▶ Proceed</button>
+      </div>
+      <div class="volume-row">
+        <span class="vol-icon" id="vol-icon">🔊</span>
+        <input type="range" class="vol-slider" id="vol-slider" min="0" max="100" value="60">
+        <span class="vol-pct" id="vol-pct">60%</span>
+      </div>
     </div>
+
+    <!-- Hidden stats (kept for JS compatibility) -->
+    <div id="stat-correct" style="display:none">0</div>
+    <div id="stat-wrong" style="display:none">0</div>
+    <div id="points" style="display:none">0</div>
+  </div>
 
   <!-- Game Overlay -->
   <div id="game-overlay">
     <div id="start-screen" class="screen active">
       <div class="game-logo">🎵</div>
-      <h1>Anthem Guesser</h1>
-      <p>Challenge your ears! Guess national anthems based on difficulty, regional focus, or recent global news.</p>
+      <h1 id="start-title">Anthem Guesser</h1>
+      <p id="start-description">Challenge your ears! Guess national anthems based on difficulty, regional focus, or recent global news.</p>
       
       <div class="selector-group">
-        <div class="group-label">1. Rounds</div>
+        <div class="group-label" id="language-group-label">Language</div>
+        <div class="language-selector">
+          <button class="lang-btn active" data-lang="en">English</button>
+          <button class="lang-btn" data-lang="ja">日本語</button>
+        </div>
+      </div>
+      
+      <div class="selector-group">
+        <div class="group-label" id="rounds-group-label">1. Rounds</div>
         <div class="round-selector">
           <button class="round-btn" data-rounds="5">5</button>
           <button class="round-btn active" data-rounds="10">10</button>
@@ -1068,17 +1073,17 @@
       </div>
 
       <div class="selector-group">
-        <div class="group-label">2. Difficulty</div>
+        <div class="group-label" id="difficulty-group-label">2. Difficulty</div>
         <div class="difficulty-selector">
           <button class="diff-btn active" data-diff="easy">Easy</button>
           <button class="diff-btn" data-diff="intermediate">Mid</button>
           <button class="diff-btn" data-diff="difficult">Hard</button>
-          <button class="diff-btn" data-diff="hell">Hell</button>
+          <button class="diff-btn" data-diff="all">All Level</button>
         </div>
       </div>
 
       <div class="selector-group">
-        <div class="group-label">3. Region / Mode</div>
+        <div class="group-label" id="region-group-label">3. Region / Mode</div>
         <div class="region-selector">
           <button class="reg-btn active" data-region="world">World</button>
           <button class="reg-btn" data-region="east-asia">East Asia</button>
@@ -1103,7 +1108,7 @@
       <div class="score-ring" id="score-ring">
         <div class="score-inner">
           <div class="score-big" id="final-score-big">0</div>
-          <div class="score-sub">/ <span id="final-total">0</span> correct</div>
+          <div class="score-sub" id="final-score-sub">/ <span id="final-total">0</span> correct</div>
         </div>
       </div>
       <div class="final-msg" id="final-msg">Game Over!</div>
@@ -1119,7 +1124,7 @@
     <div id="study-screen" class="screen">
       <div class="screen-header">
         <button class="back-btn" id="study-back-btn">← Back</button>
-        <h2>Anthem Library</h2>
+        <h2 id="study-title">Anthem Library</h2>
       </div>
       <div class="search-wrap">
         <input type="text" id="study-search" placeholder="Search countries or anthems...">
@@ -1139,20 +1144,20 @@
         <div class="wiki-sidebar">
           <img id="wiki-flag" src="" alt="Flag">
           <div class="wiki-info-box">
-            <div class="info-label">Anthem</div>
+            <div class="info-label" id="wiki-anthem-label">Anthem</div>
             <div class="info-value" id="wiki-anthem-name">Name</div>
           </div>
         </div>
         <div class="wiki-main">
-          <h3>History & Origin</h3>
+          <h3 id="wiki-history-label">History & Origin</h3>
           <p id="wiki-history">Brief history goes here...</p>
           
-          <h3>Fun Fact</h3>
+          <h3 id="wiki-fun-fact-label">Fun Fact</h3>
           <p id="wiki-fun-fact" class="fun-fact-box">Interesting fact goes here...</p>
 
           <div class="wiki-lyrics-section" id="wiki-lyrics-section">
             <div class="lyrics-header">
-              <h3>National Lyrics</h3>
+              <h3 id="wiki-lyrics-label">National Lyrics</h3>
               <div class="lyrics-toggle">
                 <button class="active" id="btn-lyric-native">Native</button>
                 <button id="btn-lyric-english">English</button>
@@ -1179,6 +1184,8 @@
     </div>
   </div>
 
+  <script src="study_audio_files.js" defer></script>
+  <script src="study_data.js" defer></script>
   <script src="guesser.js" defer></script>
 </body>
 </html>

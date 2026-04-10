@@ -33,7 +33,7 @@ body, html {
 
 .app {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 1fr;
   height: 100vh;
   background: var(--bg-gradient);
 }
@@ -209,6 +209,18 @@ path.path-wrong  { fill: var(--wrong) !important; stroke: #f87171 !important; st
 }
 .btn:not(:disabled):active { transform: scale(.97) !important; }
 
+/* Proceed Button */
+.btn-proceed {
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+}
+.btn-proceed:not(:disabled):hover {
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.55);
+  transform: translateY(-1px);
+}
+.btn-proceed.hidden { display: none; }
+
 /* Volume */
 .volume-row {
   display: flex; align-items: center; gap: 9px;
@@ -269,17 +281,17 @@ input[type=range].vol-slider::-webkit-slider-thumb {
 }
 .group-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-.round-selector, .difficulty-selector, .region-selector {
+.round-selector, .difficulty-selector, .region-selector, .language-selector {
   display: flex; flex-wrap: wrap; gap: 8px;
 }
-.round-btn, .diff-btn, .reg-btn {
+.round-btn, .diff-btn, .reg-btn, .lang-btn {
   padding: 8px 14px;
   background: rgba(139,92,246,.07); border: 1px solid rgba(139,92,246,.2);
   border-radius: 8px; color: var(--muted); font-family: inherit;
   font-size: .78rem; font-weight: 600; cursor: pointer; transition: all 140ms;
 }
-.round-btn:hover, .diff-btn:hover, .reg-btn:hover { background: rgba(139,92,246,.14); color: var(--text); }
-.round-btn.active, .diff-btn.active, .reg-btn.active {
+.round-btn:hover, .diff-btn:hover, .reg-btn:hover, .lang-btn:hover { background: rgba(139,92,246,.14); color: var(--text); }
+.round-btn.active, .diff-btn.active, .reg-btn.active, .lang-btn.active {
   background: rgba(139,92,246,.18); border-color: var(--accent);
   color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent);
 }
@@ -398,7 +410,7 @@ input[type=range].vol-slider::-webkit-slider-thumb {
   }
 
   /* Optimized button sizes for touch */
-  .round-btn, .diff-btn, .reg-btn {
+  .round-btn, .diff-btn, .reg-btn, .lang-btn {
     padding: 12px 18px;
     font-size: 0.9rem;
     flex-grow: 1;
@@ -568,4 +580,166 @@ input[type=range].vol-slider::-webkit-slider-thumb {
 @media (min-width: 769px) {
   #mobile-toggle { display: none; }
   #side-panel-backdrop { display: none; }
+}
+
+/* Floating control box */
+#game-control-box {
+  position: absolute;
+  right: clamp(12px, 2.2vw, 28px);
+  bottom: clamp(12px, 2.2vw, 28px);
+  width: min(320px, calc(100vw - 24px));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  z-index: 12;
+  background: rgba(8, 6, 18, 0.9);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.42);
+}
+
+.gcb-country {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gcb-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+#game-control-box #country-name {
+  min-height: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+#selected-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+#selected-hint .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.14);
+  flex-shrink: 0;
+}
+
+.gcb-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.gcb-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.gcb-buttons .btn-proceed {
+  grid-column: 1 / -1;
+}
+
+#game-control-box .audio-card,
+#game-control-box .volume-row {
+  margin: 0;
+}
+
+#game-control-box .btn {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  #game-control-box {
+    width: min(300px, calc(100vw - 24px));
+    padding: 12px;
+    gap: 10px;
+  }
+
+  #click-hint {
+    left: 16px;
+    transform: none;
+    max-width: calc(100vw - 340px);
+  }
+}
+
+@media (max-width: 768px) {
+  #hud {
+    max-width: calc(100vw - 24px);
+    gap: 10px;
+    padding: 8px 14px;
+  }
+
+  .hud-label {
+    font-size: 0.52rem;
+  }
+
+  .hud-value {
+    font-size: 0.82rem;
+  }
+
+  #game-control-box {
+    right: 12px;
+    left: auto;
+    bottom: 12px;
+    width: min(290px, calc(100vw - 24px));
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .gcb-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .gcb-buttons .btn-proceed {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  #hud {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .hud-divider {
+    height: 16px;
+  }
+
+  #game-control-box {
+    right: 10px;
+    bottom: 10px;
+    width: min(260px, calc(100vw - 20px));
+    padding: 10px;
+  }
+
+  #game-control-box #country-name {
+    font-size: 0.92rem;
+  }
+
+  #game-control-box .btn {
+    padding: 10px 12px;
+    font-size: 0.84rem;
+  }
+
+  #game-control-box .audio-card {
+    padding: 10px 12px;
+  }
+
+  #game-control-box .volume-row {
+    padding: 8px 10px;
+  }
 }
