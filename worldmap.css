@@ -503,6 +503,61 @@ input[type=range].vol-slider::-webkit-slider-thumb {
 }
 .player-time { font-size: 0.72rem; color: var(--muted); margin-top: 6px; font-family: monospace; }
 
+/* Lyrics Section */
+.wiki-lyrics-section {
+  margin-top: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.lyrics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: rgba(139, 92, 246, 0.08);
+  border-bottom: 1px solid var(--border);
+}
+.lyrics-header h3 { margin-top: 0 !important; font-size: 0.85rem; }
+.lyrics-toggle {
+  display: flex;
+  background: rgba(0,0,0,0.3);
+  padding: 3px;
+  border-radius: 8px;
+}
+.lyrics-toggle button {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.lyrics-toggle button.active {
+  background: var(--accent);
+  color: #fff;
+}
+.lyrics-box {
+  padding: 16px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.lyrics-box pre {
+  font-family: inherit;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: var(--text);
+  margin: 0;
+  opacity: 0.95;
+}
+
 @media (max-width: 768px) {
   .wiki-content { flex-direction: column; }
   .wiki-sidebar { width: 100%; display: flex; gap: 15px; align-items: center; }
