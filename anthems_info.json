@@ -1,0 +1,152 @@
+{
+  "Afghanistan": {
+    "anthem": "Milli Surood",
+    "id": "af",
+    "history": "Initially adopted in 2006, the anthem was written by Abdul Bari Jahani. Its lyrics mention various ethnic groups of Afghanistan and emphasize national unity.",
+    "funFact": "The lyrics are required by the constitution to be in Pashto and to mention 'Allah is the Greatest' (Allahu Akbar)."
+  },
+  "Argentina": {
+    "anthem": "Himno Nacional Argentino",
+    "id": "ar",
+    "history": "Adopted in 1813, the lyrics were written by Vicente López y Planes and the music by Blas Parera. It was originally much longer and included strong anti-Spanish sentiment.",
+    "funFact": "The official version today actually only uses the introduction and the final parts of the original song, as the anti-Spanish verses were removed to maintain diplomatic relations."
+  },
+  "Australia": {
+    "anthem": "Advance Australia Fair",
+    "id": "au",
+    "history": "Written by Peter Dodds McCormick in 1878, it originally had four verses. It officially replaced 'God Save the Queen' as the national anthem in 1984.",
+    "funFact": "In 2021, a single word was changed: 'For we are young and free' became 'For we are one and free' to better reflect Indigenous history."
+  },
+  "Brazil": {
+    "anthem": "Hino Nacional Brasileiro",
+    "id": "br",
+    "history": "Composed in 1831 by Francisco Manuel da Silva, it remained without official lyrics for nearly 90 years. The current patriotic lyrics were adopted in 1922.",
+    "funFact": "It is famous for its long, dramatic orchestral introduction before the singing actually begins."
+  },
+  "Canada": {
+    "anthem": "O Canada",
+    "id": "ca",
+    "history": "Originally commissioned by Lieutenant Governor Théodore Robitaille for Saint-Jean-Baptiste Day in 1880. It became the official national anthem in 1980.",
+    "funFact": "The lyrics have been revised several times; the most recent change in 2018 made the anthem gender-neutral by changing 'all thy sons' to 'all of us'."
+  },
+  "China": {
+    "anthem": "March of the Volunteers",
+    "id": "cn",
+    "history": "Originally the theme song for the 1935 film 'Children of Troubled Times', a story about volunteers fighting Japanese invaders in Northeast China.",
+    "funFact": "During the Cultural Revolution, the lyricist Tian Han was imprisoned, and the anthem was played without lyrics or with alternative words for years."
+  },
+  "France": {
+    "anthem": "La Marseillaise",
+    "id": "fr",
+    "history": "Written in 1792 by Claude Joseph Rouget de Lisle during the French Revolutionary Wars. It was a call to arms for the people to defend their country.",
+    "funFact": "It was banned by Napoleon I, Louis XVIII, and Napoleon III for its revolutionary associations before being restored as the national anthem in 1879."
+  },
+  "Germany": {
+    "anthem": "Das Lied der Deutschen",
+    "id": "de",
+    "history": "The melody was written by Joseph Haydn in 1797. The lyrics were written by Hoffmann von Fallersleben in 1841.",
+    "funFact": "Since 1952, only the third stanza ('Einigkeit und Recht und Freiheit') has been used as the national anthem to avoid associations with the first stanza's misuse by the Nazi regime."
+  },
+  "Greece": {
+    "anthem": "Hymn to Liberty",
+    "id": "gr",
+    "history": "The lyrics come from a massive poem of 158 stanzas written by Dionysios Solomos in 1823. It became the national anthem in 1865.",
+    "funFact": "It is the longest national anthem in the world by text (158 stanzas), though only the first two are ever sung."
+  },
+  "India": {
+    "anthem": "Jana Gana Mana",
+    "id": "in",
+    "history": "Written by Nobel laureate Rabindranath Tagore in 1911. It was officially adopted by the Constituent Assembly as the national anthem in 1950.",
+    "funFact": "A formal rendition of the national anthem takes exactly 52 seconds. A shortened version consisting of the first and last lines takes about 20 seconds."
+  },
+  "Italy": {
+    "anthem": "Il Canto degli Italiani",
+    "id": "it",
+    "history": "Also known as 'Fratelli d’Italia', it was written in 1847 by Goffredo Mameli. It was only officially made the de jure national anthem in 2017.",
+    "funFact": "Goffredo Mameli was only 20 years old when he wrote the lyrics; he died just two years later in the struggle for Italian unification."
+  },
+  "Japan": {
+    "anthem": "Kimigayo",
+    "id": "jp",
+    "history": "Its lyrics are among the world's oldest, based on a Waka poem from the Heian period. The music was composed in the late 19th century.",
+    "funFact": "With only 32 characters, it has one of the shortest lyrics of any national anthem in the world."
+  },
+  "Mexico": {
+    "anthem": "Himno Nacional Mexicano",
+    "id": "mx",
+    "history": "Adopted in 1854 after a national contest. The lyrics were written by Francisco González Bocanegra after his fiancée locked him in a room until he finished them.",
+    "funFact": "Mexico has very strict laws regarding the anthem; it is illegal to sing it incorrectly or use it for commercial purposes."
+  },
+  "Netherlands": {
+    "anthem": "Wilhelmus van Nassouwe",
+    "id": "nl",
+    "history": "Dates back to at least 1572, making it the oldest national anthem in the world. It is written from the perspective of William of Orange.",
+    "funFact": "The first letters of each of the 15 stanzas form the name 'Willem van Nassov', a common poetic device known as an acrostic."
+  },
+  "Poland": {
+    "anthem": "Poland Is Not Yet Lost",
+    "id": "pl",
+    "history": "Written in 1797 in Italy by Józef Wybicki for the Polish Legions serving under Napoleon. It expresses the hope that Poland will regain its independence.",
+    "funFact": "The lyrics have inspired several other Slavic anthems, including the former anthem of Yugoslavia."
+  },
+  "Portugal": {
+    "anthem": "A Portuguesa",
+    "id": "pt",
+    "history": "Composed in response to the 1890 British Ultimatum. It was originally a revolutionary song for the republican movement before becoming the national anthem in 1911.",
+    "funFact": "One line was changed from 'Against the Britons, march, march!' to 'Against the cannons, march, march!' to avoid offending their oldest ally."
+  },
+  "Russian Federation": {
+    "anthem": "State Anthem of the Russian Federation",
+    "id": "ru",
+    "history": "Adopted in 2000, it uses the music of the former Soviet Union anthem (composed by Alexander Alexandrov) with new lyrics by Sergey Mikhalkov.",
+    "funFact": "Sergey Mikhalkov also wrote the lyrics for the original 1944 Soviet anthem and its 1977 revision, making him the author of three different anthem versions."
+  },
+  "South Africa": {
+    "anthem": "National Anthem of South Africa",
+    "id": "za",
+    "history": "A unique hybrid anthem adopted in 1997. It combines the popular hymn 'Nkosi Sikelel' iAfrika' with the former anthem 'Die Stem van Suid-Afrika'.",
+    "funFact": "It is the only national anthem in the world that moves through five different languages: isiXhosa, isiZulu, Sesotho, Afrikaans, and English."
+  },
+  "South Korea": {
+    "anthem": "Aegukga",
+    "id": "kr",
+    "history": "The name means 'The Patriotic Song'. The music was composed in 1935 by Ahn Eak-tai while he was in Spain, to replace a version sung to a Scottish folk tune.",
+    "funFact": "Before the current music was composed, the lyrics were often sung to the tune of 'Auld Lang Syne'."
+  },
+  "Spain": {
+    "anthem": "Marcha Real",
+    "id": "es",
+    "history": "One of the oldest anthems in the world, first appearing in 1761. It was originally a military march for the Spanish Infantry.",
+    "funFact": "It is one of the few national anthems in the world that has no official lyrics, though several versions have been proposed over the years."
+  },
+  "Switzerland": {
+    "anthem": "Swiss Psalm",
+    "id": "ch",
+    "history": "Composed in 1841 by Alberik Zwyssig, it was traditionally sung at national events for over a century before officially becoming the anthem in 1981.",
+    "funFact": "The lyrics have official versions in all four national languages of Switzerland: German, French, Italian, and Romansh."
+  },
+  "Turkey": {
+    "anthem": "İstiklâl Marşı",
+    "id": "tr",
+    "history": "Adopted in 1921 during the Turkish War of Independence. The lyrics by Mehmet Akif Ersoy were selected from 724 entries in a nationwide competition.",
+    "funFact": "Ersoy refused the prize money for winning the contest, as he felt he shouldn't be paid for writing a song for his nation."
+  },
+  "Ukraine": {
+    "anthem": "Shche ne vmerla Ukrainy i slava, i volia",
+    "id": "ua",
+    "history": "The lyrics were written in 1862 by Pavlo Chubynsky. It was briefly the anthem of the Ukrainian People's Republic in 1917 before being restored in 1992.",
+    "funFact": "The title translates to 'The glory and the freedom of Ukraine has not yet perished', reflecting the nation's long struggle for independence."
+  },
+  "United Kingdom": {
+    "anthem": "God Save the King",
+    "id": "gb",
+    "history": "The origin of the words and music is obscure. It was first performed in a London theatre in 1745 and became known as the National Anthem in the early 19th century.",
+    "funFact": "The anthem has no single authorized version; it is a tradition rather than a law. The lyrics change from 'Queen' to 'King' depending on the current monarch."
+  },
+  "United States": {
+    "anthem": "The Star-Spangled Banner",
+    "id": "us",
+    "history": "Lyrics were written in 1814 by Francis Scott Key after he saw the American flag still flying over Fort McHenry after a British bombardment.",
+    "funFact": "The music was actually taken from an old British drinking song called 'To Anacreon in Heaven'."
+  }
+}

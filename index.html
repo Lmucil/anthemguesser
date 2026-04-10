@@ -2,12 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
   <title>Anthem Guesser</title>
   <link rel="stylesheet" href="worldmap.css" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>anthemguesser</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="https://lmucil.github.io/anthemguesser/icon.png" />
@@ -27,6 +24,7 @@
   <meta name="twitter:image" content="https://lmucil.github.io/anthemguesser/thumbnail.png" />
 </head>
 <body>
+  <div id="side-panel-backdrop"></div>
   <div class="app">
     <div class="world-map">
       <!-- Your SVG goes here. Make sure it has a viewBox. -->
@@ -1096,7 +1094,10 @@
         </div>
       </div>
 
-      <button class="btn btn-primary btn-lg" id="start-game-btn" style="margin-top:10px">Start Game →</button>
+      <div class="start-btns" style="display:flex; gap:10px; margin-top:10px;">
+        <button class="btn btn-ghost" id="study-mode-btn" style="flex:1">📖 Study Mode</button>
+        <button class="btn btn-primary" id="start-game-btn" style="flex:2">Start Game →</button>
+      </div>
     </div>
     <div id="end-screen" class="screen">
       <div class="score-ring" id="score-ring">
@@ -1111,6 +1112,56 @@
       <div class="end-btns">
         <button class="btn btn-ghost" id="menu-btn" style="flex:1">☰ Menu</button>
         <button class="btn btn-primary" id="again-btn" style="flex:2">Play Again →</button>
+      </div>
+    </div>
+
+    <!-- Study Mode: Country List -->
+    <div id="study-screen" class="screen">
+      <div class="screen-header">
+        <button class="back-btn" id="study-back-btn">← Back</button>
+        <h2>Anthem Library</h2>
+      </div>
+      <div class="search-wrap">
+        <input type="text" id="study-search" placeholder="Search countries or anthems...">
+      </div>
+      <div class="country-list" id="country-list">
+        <!-- populated by js -->
+      </div>
+    </div>
+
+    <!-- Study Mode: Wiki Page -->
+    <div id="wiki-screen" class="screen">
+      <div class="screen-header">
+        <button class="back-btn" id="wiki-back-btn">← Library</button>
+        <h2 id="wiki-country-title">Country Details</h2>
+      </div>
+      <div class="wiki-content">
+        <div class="wiki-sidebar">
+          <img id="wiki-flag" src="" alt="Flag">
+          <div class="wiki-info-box">
+            <div class="info-label">Anthem</div>
+            <div class="info-value" id="wiki-anthem-name">Name</div>
+          </div>
+        </div>
+        <div class="wiki-main">
+          <h3>History & Origin</h3>
+          <p id="wiki-history">Brief history goes here...</p>
+          
+          <h3>Fun Fact</h3>
+          <p id="wiki-fun-fact" class="fun-fact-box">Interesting fact goes here...</p>
+
+          <div class="wiki-player">
+            <div class="player-controls">
+              <button id="wiki-play-btn" class="player-btn">▶</button>
+              <div class="player-track">
+                <input type="range" id="wiki-progress" value="0" min="0" max="100">
+                <div class="player-time">
+                  <span id="wiki-time-current">0:00</span> / <span id="wiki-time-total">0:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
