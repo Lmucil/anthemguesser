@@ -71,10 +71,9 @@
   const wikiProgress = document.getElementById('wiki-progress');
   const wikiTimeCurr = document.getElementById('wiki-time-current');
   const wikiTimeTotal= document.getElementById('wiki-time-total');
-  const wikiLyrics     = document.getElementById('wiki-lyrics');
+  const wikiLyricsNative = document.getElementById('wiki-lyrics-native');
+  const wikiLyricsTranslation = document.getElementById('wiki-lyrics-translation');
   const wikiLyricsSection = document.getElementById('wiki-lyrics-section');
-  const btnLyricNative = document.getElementById('btn-lyric-native');
-  const btnLyricEnglish = document.getElementById('btn-lyric-english');
   const uiRefs = {
     selectedCountryLabel: document.getElementById('selected-country-label'),
     anthemLabel: document.getElementById('anthem-label'),
@@ -89,7 +88,11 @@
     wikiAnthemLabel: document.getElementById('wiki-anthem-label'),
     wikiHistoryLabel: document.getElementById('wiki-history-label'),
     wikiFunFactLabel: document.getElementById('wiki-fun-fact-label'),
-    wikiLyricsLabel: document.getElementById('wiki-lyrics-label')
+    wikiLyricsLabel: document.getElementById('wiki-lyrics-label'),
+    wikiLyricsNativeLabel: document.getElementById('wiki-lyrics-native-label'),
+    wikiLyricsTranslationLabel: document.getElementById('wiki-lyrics-translation-label'),
+    wikiLyricsNativeBlock: document.getElementById('wiki-lyrics-native-block'),
+    wikiLyricsTranslationBlock: document.getElementById('wiki-lyrics-translation-block')
   };
 
   /* ── Inject HUD ── */
@@ -473,9 +476,12 @@
     uiRefs.wikiHistoryLabel.textContent = t('historyOrigin');
     uiRefs.wikiFunFactLabel.textContent = t('funFact');
     uiRefs.wikiLyricsLabel.textContent = t('lyrics');
-    btnLyricNative.textContent = t('native');
-    btnLyricEnglish.textContent = t('translationLabel');
-    if (!wikiLyrics.dataset.hasContent || wikiLyrics.dataset.hasContent === 'false') wikiLyrics.textContent = t('lyricsPlaceholder');
+    uiRefs.wikiLyricsNativeLabel.textContent = t('native');
+    uiRefs.wikiLyricsTranslationLabel.textContent = t('translationLabel');
+    if (!wikiLyricsSection.dataset.hasContent || wikiLyricsSection.dataset.hasContent === 'false') {
+      wikiLyricsNative.textContent = t('lyricsPlaceholder');
+      wikiLyricsTranslation.textContent = t('lyricsPlaceholder');
+    }
   }
   function refreshLanguageState() {
     updateLanguageButtons();
@@ -535,6 +541,14 @@
     if (!info) return '';
     if (gs.language === 'ja' && info.translation_ja) return info.translation_ja;
     return info.translation || '';
+  }
+
+  function buildWikiUrl(name) {
+    return `wiki.html?country=${encodeURIComponent(name)}&lang=${encodeURIComponent(gs.language)}`;
+  }
+
+  function buildStudyUrl() {
+    return `study.html?lang=${encodeURIComponent(gs.language)}`;
   }
 
 
@@ -673,7 +687,7 @@
       const item = document.createElement('div');
       item.className = 'country-item';
       item.innerHTML = `<img src="https://flagcdn.com/w80/${iso.toLowerCase()}.png" alt="flag"><div class="country-info"><span class="c-name">${escapeHtml(displayName)}</span>${anthem ? `<span class="c-anthem">${escapeHtml(anthem)}${native && native !== anthem ? ` (${escapeHtml(native)})` : ''}</span>` : ''}</div>`;
-      item.onclick = () => showWikiPage(name);
+      item.onclick = () => { window.location.href = buildWikiUrl(name); };
       countryList.appendChild(item);
     });
   }
@@ -699,18 +713,16 @@
     if (info.lyrics || data.translation) {
       wikiLyricsSection.style.display = 'block';
       gs.currentWikiLyrics = { native: info.lyrics || '', english: data.translation || '' };
-      // Default to Native if available, else English
-      const hasNative = !!gs.currentWikiLyrics.native;
-      wikiLyrics.textContent = hasNative ? gs.currentWikiLyrics.native : gs.currentWikiLyrics.english;
-      wikiLyrics.dataset.hasContent = 'true';
-      btnLyricNative.classList.toggle('active', hasNative);
-      btnLyricEnglish.classList.toggle('active', !hasNative);
-      btnLyricNative.style.display = hasNative ? 'inline-block' : 'none';
-      btnLyricEnglish.style.display = gs.currentWikiLyrics.english ? 'inline-block' : 'none';
+      wikiLyricsSection.dataset.hasContent = 'true';
+      uiRefs.wikiLyricsNativeBlock.style.display = gs.currentWikiLyrics.native ? 'flex' : 'none';
+      uiRefs.wikiLyricsTranslationBlock.style.display = gs.currentWikiLyrics.english ? 'flex' : 'none';
+      wikiLyricsNative.textContent = gs.currentWikiLyrics.native || t('lyricsPlaceholder');
+      wikiLyricsTranslation.textContent = gs.currentWikiLyrics.english || t('lyricsPlaceholder');
     } else {
       wikiLyricsSection.style.display = 'none';
-      wikiLyrics.dataset.hasContent = 'false';
-      wikiLyrics.textContent = t('lyricsPlaceholder');
+      wikiLyricsSection.dataset.hasContent = 'false';
+      wikiLyricsNative.textContent = t('lyricsPlaceholder');
+      wikiLyricsTranslation.textContent = t('lyricsPlaceholder');
     }
 
     wikiFlag.src = `https://flagcdn.com/w160/${data.id}.png`;
@@ -772,7 +784,7 @@
   menuBtn.addEventListener('click', () => { stopAudio(); gs.state='menu'; [startScreen, endScreen].forEach(s=>s.classList.remove('active')); startScreen.classList.add('active'); overlay.classList.remove('hidden'); });
 
   wikiPlayBtn.addEventListener('click', () => { if (wikiAudio) stopWikiAudio(); else startWikiAudio(); });
-  studyModeBtn.addEventListener('click', async () => { overlay.classList.remove('hidden'); [startScreen, endScreen, wikiScreen].forEach(s => s.classList.remove('active')); studyScreen.classList.add('active'); await renderCountryList(); });
+  studyModeBtn.addEventListener('click', () => { window.location.href = buildStudyUrl(); });
   studyBackBtn.addEventListener('click', () => { [studyScreen,wikiScreen].forEach(s=>s.classList.remove('active')); startScreen.classList.add('active'); overlay.classList.remove('hidden'); });
   wikiBackBtn.addEventListener('click', () => { [wikiScreen].forEach(s=>s.classList.remove('active')); studyScreen.classList.add('active'); stopWikiAudio(); });
   langBtns.forEach(btn => btn.addEventListener('click', () => {
@@ -782,19 +794,6 @@
     if (wikiScreen.classList.contains('active') && wikiCountryTitle.dataset.countryName) showWikiPage(wikiCountryTitle.dataset.countryName);
     if (endScreen.classList.contains('active')) endGame();
   }));
-
-  btnLyricNative.addEventListener('click', () => {
-    if (!gs.currentWikiLyrics || !gs.currentWikiLyrics.native) return;
-    wikiLyrics.textContent = gs.currentWikiLyrics.native;
-    btnLyricNative.classList.add('active');
-    btnLyricEnglish.classList.remove('active');
-  });
-  btnLyricEnglish.addEventListener('click', () => {
-    if (!gs.currentWikiLyrics || !gs.currentWikiLyrics.english) return;
-    wikiLyrics.textContent = gs.currentWikiLyrics.english;
-    btnLyricEnglish.classList.add('active');
-    btnLyricNative.classList.remove('active');
-  });
 
   proceedBtn.addEventListener('click', () => {
     proceedBtn.classList.add('hidden');

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Anthem Details</title>
+  <link rel="stylesheet" href="worldmap.css" />
+</head>
+<body class="wiki-page">
+  <main class="wiki-page-shell">
+    <section id="wiki-standalone" class="wiki-page-card">
+      <div class="screen-header">
+        <button class="back-btn" id="wiki-back-btn">← Back</button>
+        <h1 id="wiki-country-title">Country Details</h1>
+      </div>
+
+      <div class="wiki-content">
+        <div class="wiki-sidebar">
+          <img id="wiki-flag" src="" alt="Flag">
+          <div class="wiki-info-box">
+            <div class="info-label" id="wiki-anthem-label">Anthem</div>
+            <div class="info-value" id="wiki-anthem-name">Name</div>
+          </div>
+        </div>
+
+        <div class="wiki-main">
+          <h3 id="wiki-history-label">History & Origin</h3>
+          <p id="wiki-history">Brief history goes here...</p>
+
+          <h3 id="wiki-fun-fact-label">Fun Fact</h3>
+          <p id="wiki-fun-fact" class="fun-fact-box">Interesting fact goes here...</p>
+
+          <div class="wiki-lyrics-section" id="wiki-lyrics-section">
+            <div class="lyrics-header">
+              <h3 id="wiki-lyrics-label">National Lyrics</h3>
+            </div>
+            <div class="lyrics-box">
+              <div class="lyrics-block" id="wiki-lyrics-native-block">
+                <div class="lyrics-subtitle" id="wiki-lyrics-native-label">Native</div>
+                <pre id="wiki-lyrics-native">Lyrics will appear here...</pre>
+              </div>
+              <div class="lyrics-block" id="wiki-lyrics-translation-block">
+                <div class="lyrics-subtitle" id="wiki-lyrics-translation-label">English</div>
+                <pre id="wiki-lyrics-translation">Lyrics will appear here...</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="wiki-player">
+            <div class="player-controls">
+              <button id="wiki-play-btn" class="player-btn">▶</button>
+              <div class="player-track">
+                <input type="range" id="wiki-progress" value="0" min="0" max="100">
+                <div class="player-time">
+                  <span id="wiki-time-current">0:00</span> / <span id="wiki-time-total">0:00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="study_audio_files.js" defer></script>
+  <script src="study_data.js" defer></script>
+  <script src="wiki.js" defer></script>
+</body>
+</html>
